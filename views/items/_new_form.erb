@@ -1,0 +1,10 @@
+<% task_list = locals[:task_list] %>
+
+<form id="item_new_form" class="form-inline">
+  <%= csrf_tag %>
+  <input type="hidden" value="<%= task_list.id %>" name="task_list_id">
+  <div class="form-group">
+    <input type="text" class="form-control" name="value" placeholder="Item value" value>
+  </div>
+  <button class="btn btn-primary">Add</button>
+</form>

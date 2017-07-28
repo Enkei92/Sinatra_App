@@ -1,0 +1,68 @@
+li.greeting {
+    display: block;
+    padding-top: 15px;
+    padding-bottom: 15px; 
+    color: #777;
+}    
+
+div.page_content {
+    padding-left: 15px;
+    box-sizing: border-box;
+    margin: auto;
+    width: 50%;
+}
+
+.list_header {
+  text-align: center;
+}
+
+div.page_content ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+div.page_content ul li {
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 5px;
+    background: #eee;
+    transition: 0.2s;
+}
+
+div.page_content ul li:nth-child(odd) {
+    background: #f9f9f9;
+}
+
+div.page_content ul li:hover {
+    background: #ddd;
+}
+
+div.page_content ul li.checked {
+    background: #888;
+    color: #fff;
+    text-decoration: line-through;
+}
+
+div.page_content .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 12px 16px 12px 16px;
+}
+
+div.page_content .check {  
+    font-size: 18px;
+    padding: 12px 16px 12px 16px;
+}
+
+div.page_content .close:hover {
+    background-color: #f44336;
+    color: white;
+}
+
+div.page_content ul li.done_true {
+    background: #888;
+    color: #fff;
+    text-decoration: line-through;
+}
