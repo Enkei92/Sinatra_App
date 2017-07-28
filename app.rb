@@ -4,6 +4,7 @@ require 'sinatra/json'
 require 'omniauth'
 require 'omniauth-github'
 require 'sinatra/activerecord'
+require 'jwt'
 require './models/user'
 require './models/task_list'
 require './models/item'
@@ -27,6 +28,13 @@ end
 
 use OmniAuth::Builder do
   provider :github, secrets['github_key'], secrets['github_secret']
+end
+
+def private_session
+  return erb :index unless token = session['user']
+  @data = JWT.decode token, '70617373776F7264', true, { :algorithm => 'HS256' }
+  erb "<pre>#{@data[0]["data"]}</pre>"
+  return  unless data[0]["data"]
 end
 
 post '/add_item' do
@@ -60,6 +68,7 @@ get '/' do
 end
 
 get '/auth/:provider/callback' do
+  private_session
   auth = request.env['omniauth.auth']
   @user = User.from_omniauth(auth)
   if @user
@@ -68,12 +77,12 @@ get '/auth/:provider/callback' do
     session[:authenticated] = true
     redirect '/'
   else
-    erb "<h1>Can's create session</h1><h3>message:<h3> <pre>#{params}</pre>"
+    erb :session_fail
   end
 end
 
 get '/auth/failure' do
-  erb "<h1>Authentication Failed:</h1><h3>message:<h3> <pre>#{params}</pre>"
+  erb :auth_fail
 end
 
 get '/logout' do
