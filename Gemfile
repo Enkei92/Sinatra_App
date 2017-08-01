@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'sinatra-activerecord'
+gem 'sinatra-contrib'
+gem 'pg'
+gem 'thin'
+gem 'rake'
+gem 'rack_csrf'
+gem 'omniauth'
+gem 'omniauth-github'
+gem 'omniauth-oauth2'

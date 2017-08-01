@@ -1,0 +1,5 @@
+<% if session[:authenticated] %>
+    <%= erb(:"task_lists/_view", :locals => { :task_list => @user.task_lists.first }) %>
+<% else %>
+  <h3>Sign in to use TODO list!</h3>
+<% end %>
