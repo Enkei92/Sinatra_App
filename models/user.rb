@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   has_many :task_lists
 
   def self.from_omniauth(auth)
-    user = User.find_by(provider: auth.provider, uid: auth.uid).take
+    user = User.find_by(provider: auth.provider, uid: auth.uid)
     unless user
       user = User.create(
         provider: auth.provider,
