@@ -4,3 +4,4 @@ development:
   username: pguser
   password: pguser
   host: localhost
+  
