@@ -4,7 +4,6 @@ require 'sinatra/json'
 require 'omniauth'
 require 'omniauth-github'
 require 'sinatra/activerecord'
-require 'jwt'
 require './models/user'
 require './models/task_list'
 require './models/item'
@@ -24,21 +23,18 @@ helpers do
   def csrf_tag
     Rack::Csrf.csrf_tag(env)
   end
+
+  def current_user
+    User.find_by_id(session[:user_id])
+  end
 end
 
 use OmniAuth::Builder do
   provider :github, secrets['github_key'], secrets['github_secret']
 end
 
-def private_session
-  return erb :index unless token = session['user']
-  @data = JWT.decode token, '70617373776F7264', true, { :algorithm => 'HS256' }
-  erb "<pre>#{@data[0]["data"]}</pre>"
-  return  unless data[0]["data"]
-end
-
 post '/add_item' do
-  if session[:authenticated]
+  if current_user
     item = Item.create(
       value: params[:value],
       task_list_id: params[:task_list_id])
@@ -50,31 +46,31 @@ end
 
 delete '/items/:id' do
   item = Item.find(params[:id])
-  item.destroy
-  json item_id: params[:id]
+  if  item.destroy
+    json item_id: params[:id]
+  else 
+    status 500
+  end    
 end
 
 put '/items/:id' do
   item = Item.find(params[:id])
-  item.update(done: !item.done)
-  json item: { done: item.done, id: item.id }
+  if item.update(done: !item.done)
+    json item: { done: item.done, id: item.id }
+  else
+    status 500
+  end
 end
 
 get '/' do
-  if session[:authenticated]
-    @user = User.find(session[:user_id])
-    erb :index
-  end  
+  erb :index
 end
 
 get '/auth/:provider/callback' do
-  private_session
   auth = request.env['omniauth.auth']
-  @user = User.from_omniauth(auth)
-  if @user
-    session[:user_id] = @user.id
-    session[:user_name] = @user.name
-    session[:authenticated] = true
+  user = User.from_omniauth(auth)
+  if user
+    session[:user_id] = user.id
     redirect '/'
   else
     erb :session_fail
@@ -86,8 +82,6 @@ get '/auth/failure' do
 end
 
 get '/logout' do
-  session[:authenticated] = false
-  puts session[:authenticated]
+  session[:user_id] = nil
   redirect '/'
 end
-

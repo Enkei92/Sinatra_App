@@ -77,7 +77,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  jwt
   omniauth
   omniauth-github
   omniauth-oauth2
